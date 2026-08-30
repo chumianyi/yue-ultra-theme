@@ -19,9 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yue.ultra.theme.animation.*
 import com.yue.ultra.theme.components.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.yue.ultra.theme.effects.*
-import com.yue.ultra.theme.extensions.yueUltra
+import com.yue.ultra.theme.extensions.*
 import com.yue.ultra.theme.theme.*
+import com.yue.ultra.theme.utils.YueThemeInfo
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

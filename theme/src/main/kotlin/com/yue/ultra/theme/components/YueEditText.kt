@@ -11,6 +11,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,7 +25,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -202,7 +204,7 @@ fun YueSearchBar(
         cornerRadius = 28,
         leadingIcon = {
             Icon(
-                imageVector = androidx.compose.material.icons.Icons.Default.Search,
+                imageVector = Icons.Default.Search,
                 contentDescription = "搜索",
                 tint = Color.White.copy(alpha = 0.7f),
                 modifier = Modifier.size(20.dp)
@@ -212,7 +214,7 @@ fun YueSearchBar(
             {
                 IconButton(onClick = { onQueryChange("") }) {
                     Icon(
-                        imageVector = androidx.compose.material.icons.Icons.Default.Clear,
+                        imageVector = Icons.Default.Clear,
                         contentDescription = "清除",
                         tint = Color.White.copy(alpha = 0.7f),
                         modifier = Modifier.size(20.dp)
@@ -220,8 +222,8 @@ fun YueSearchBar(
                 }
             }
         } else null,
-        keyboardOptions = androidx.compose.ui.text.input.KeyboardOptions(
-            imeAction = androidx.compose.ui.text.input.ImeAction.Search
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search
         ),
         keyboardActions = KeyboardActions(
             onSearch = { onSearch(query) }
@@ -249,13 +251,13 @@ fun YuePasswordField(
         placeholder = placeholder,
         singleLine = true,
         visualTransformation = if (passwordVisible) VisualTransformation.None
-        else androidx.compose.ui.text.input.PasswordVisualTransformation(),
-        keyboardOptions = androidx.compose.ui.text.input.KeyboardOptions(
-            keyboardType = androidx.compose.ui.text.input.KeyboardType.Password
+        else PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password
         ),
         leadingIcon = {
             Icon(
-                imageVector = androidx.compose.material.icons.Icons.Default.Lock,
+                imageVector = Icons.Default.Lock,
                 contentDescription = "密码",
                 tint = Color.White.copy(alpha = 0.7f),
                 modifier = Modifier.size(20.dp)
@@ -265,9 +267,9 @@ fun YuePasswordField(
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(
                     imageVector = if (passwordVisible)
-                        androidx.compose.material.icons.Icons.Filled.Visibility
+                        Icons.Filled.Visibility
                     else
-                        androidx.compose.material.icons.Icons.Filled.VisibilityOff,
+                        Icons.Filled.VisibilityOff,
                     contentDescription = if (passwordVisible) "隐藏密码" else "显示密码",
                     tint = Color.White.copy(alpha = 0.7f),
                     modifier = Modifier.size(20.dp)

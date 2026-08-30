@@ -19,13 +19,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Theme AAR
+      - name: Build Theme AAR and JAR
         run: ./gradlew :theme:assembleRelease --no-daemon
-
-      - name: Create JAR files
-        run: |
-          ./gradlew :theme:createJar --no-daemon
-          ./gradlew :theme:createUltraJar --no-daemon
 
       - name: Build Demo APK
         run: ./gradlew :app:assembleDebug --no-daemon

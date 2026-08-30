@@ -42,29 +42,14 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
 }
 
-// 生成JAR任务（普通版，无Ultra后缀）
-task createJar(type: Copy) {
-    from('build/intermediates/aar_main_jar/release/')
-    into('build/outputs/jar/')
-    include('classes.jar')
-    rename('classes.jar', 'YueTheme.jar')
-}
-
-// 生成Ultra版JAR
-task createUltraJar(type: Copy) {
-    from('build/intermediates/aar_main_jar/release/')
-    into('build/outputs/jar/')
-    include('classes.jar')
-    rename('classes.jar', 'YueThemeUltra.jar')
-}
-
-// 重命名AAR
-tasks.named("assembleRelease") {
-    doLast {
+// 构建完成后重命名AAR并生成JAR
+afterEvaluate {
+    assembleRelease.doLast {
         def aarDir = file("build/outputs/aar/")
         if (aarDir.exists()) {
             aarDir.listFiles().each { file ->
-                if (file.name.endsWith('.aar')) {
+                if (file.name.endsWith('.aar') && !file.name.contains('Ultra')) {
+                    // 复制为Ultra版本
                     def ultraName = file.name.replace('.aar', '-Ultra.aar')
                     copy {
                         from file
@@ -74,8 +59,27 @@ tasks.named("assembleRelease") {
                 }
             }
         }
+
+        // 生成JAR文件
+        def jarDir = file("build/outputs/jar/")
+        jarDir.mkdirs()
+
+        // 查找classes.jar
+        def classesJar = fileTree(dir: 'build/intermediates', include: '**/classes.jar').find()
+        if (classesJar != null) {
+            copy {
+                from classesJar
+                into jarDir
+                rename { 'YueTheme.jar' }
+            }
+            copy {
+                from classesJar
+                into jarDir
+                rename { 'YueThemeUltra.jar' }
+            }
+            println "JAR files generated at: ${jarDir.absolutePath}"
+        } else {
+            println "Warning: classes.jar not found"
+        }
     }
 }
-
-createJar.dependsOn(build)
-createUltraJar.dependsOn(build)

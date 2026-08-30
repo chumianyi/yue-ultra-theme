@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.Gravity
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import com.yue.ultra.theme.YueThemeConfig
 import com.yue.ultra.theme.effect.YueGlowEffect
@@ -44,13 +45,14 @@ class YueEditText @JvmOverloads constructor(
         setTextColor(Color.WHITE)
         setHintTextColor(YueThemeConfig.withAlpha(Color.WHITE, 0.5f))
 
-        // 光标颜色
+        // 光标颜色通过textCursorDrawable设置
         try {
             val cursorDrawable = android.graphics.drawable.GradientDrawable()
             cursorDrawable.setColor(YueThemeConfig.glowColor)
             cursorDrawable.setSize(4, 40)
-            val field = TextView::class.java.getDeclaredField("mCursorDrawableRes")
+            val field = TextView::class.java.getDeclaredField("mCursorDrawable")
             field.isAccessible = true
+            field.set(this, arrayOf(cursorDrawable, cursorDrawable))
         } catch (e: Exception) {
             // ignore
         }

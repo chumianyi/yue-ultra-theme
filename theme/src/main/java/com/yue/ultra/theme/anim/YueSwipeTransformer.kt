@@ -4,6 +4,7 @@ import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.yue.ultra.theme.YueThemeConfig
 import kotlin.math.abs
+import kotlin.math.max
 
 /**
  * 极致Yue Ultra 丝滑滑动切换动画
@@ -47,11 +48,11 @@ class YueSwipeTransformer : ViewPager2.PageTransformer {
             }
             position <= 1 -> {
                 // 透明度渐变
-                val alphaFactor = max(minAlpha, 1 - abs(position))
+                val alphaFactor = maxOf(minAlpha, 1 - abs(position))
                 page.alpha = alphaFactor
 
                 // 缩放效果
-                val scaleFactor = max(minScale, 1 - abs(position) * 0.15f)
+                val scaleFactor = maxOf(minScale, 1 - abs(position) * 0.15f)
                 page.scaleX = scaleFactor
                 page.scaleY = scaleFactor
 
@@ -111,10 +112,10 @@ class YueSwipeTransformer : ViewPager2.PageTransformer {
                 page.alpha = 0f
             }
             position <= 1 -> {
-                val scale = max(minScale, 1 - abs(position))
+                val scale = maxOf(minScale, 1 - abs(position))
                 page.scaleX = scale
                 page.scaleY = scale
-                page.alpha = max(minAlpha, 1 - abs(position))
+                page.alpha = maxOf(minAlpha, 1 - abs(position))
                 page.translationX = page.width * -position * 0.5f
             }
             else -> {

@@ -21,12 +21,20 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.8'
     }
 
     sourceSets {
@@ -35,11 +43,57 @@ android {
 }
 
 dependencies {
+    // Compose BOM
+    def composeBom = platform('androidx.compose:compose-bom:2024.02.00')
+    implementation composeBom
+
+    // Material3
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material:material-icons-extended'
+
+    // Compose UI
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+
+    // Compose Foundation
+    implementation 'androidx.compose.foundation:foundation'
+    implementation 'androidx.compose.animation:animation'
+    implementation 'androidx.compose.animation:animation-graphics'
+
+    // Activity Compose
+    implementation 'androidx.activity:activity-compose:1.8.2'
+
+    // Lifecycle
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
+
+    // Navigation
+    implementation 'androidx.navigation:navigation-compose:2.7.7'
+
+    // Coil for image loading
+    implementation 'io.coil-kt:coil-compose:2.5.0'
+
+    // AndroidX Core
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
+
+    // ViewPager2 for compatibility
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
+
+    // ConstraintLayout Compose
+    implementation 'androidx.constraintlayout:constraintlayout-compose:1.0.1'
+
+    // Paging
+    implementation 'androidx.paging:paging-compose:3.2.1'
+
+    // DataStore
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 }
 
 // 构建完成后重命名AAR并生成JAR
@@ -49,7 +103,6 @@ afterEvaluate {
         if (aarDir.exists()) {
             aarDir.listFiles().each { file ->
                 if (file.name.endsWith('.aar') && !file.name.contains('Ultra')) {
-                    // 复制为Ultra版本
                     def ultraName = file.name.replace('.aar', '-Ultra.aar')
                     copy {
                         from file
@@ -60,11 +113,9 @@ afterEvaluate {
             }
         }
 
-        // 生成JAR文件
         def jarDir = file("build/outputs/jar/")
         jarDir.mkdirs()
 
-        // 查找classes.jar
         def classesJar = fileTree(dir: 'build/intermediates', include: '**/classes.jar').find()
         if (classesJar != null) {
             copy {

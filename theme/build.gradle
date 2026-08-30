@@ -1,0 +1,81 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    namespace 'com.yue.ultra.theme'
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 34
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+}
+
+// 生成JAR任务（普通版，无Ultra后缀）
+task createJar(type: Copy) {
+    from('build/intermediates/aar_main_jar/release/')
+    into('build/outputs/jar/')
+    include('classes.jar')
+    rename('classes.jar', 'YueTheme.jar')
+}
+
+// 生成Ultra版JAR
+task createUltraJar(type: Copy) {
+    from('build/intermediates/aar_main_jar/release/')
+    into('build/outputs/jar/')
+    include('classes.jar')
+    rename('classes.jar', 'YueThemeUltra.jar')
+}
+
+// 重命名AAR
+tasks.named("assembleRelease") {
+    doLast {
+        def aarDir = file("build/outputs/aar/")
+        if (aarDir.exists()) {
+            aarDir.listFiles().each { file ->
+                if (file.name.endsWith('.aar')) {
+                    def ultraName = file.name.replace('.aar', '-Ultra.aar')
+                    copy {
+                        from file
+                        into aarDir
+                        rename { ultraName }
+                    }
+                }
+            }
+        }
+    }
+}
+
+createJar.dependsOn(build)
+createUltraJar.dependsOn(build)

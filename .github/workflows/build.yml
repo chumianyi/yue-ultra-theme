@@ -1,0 +1,49 @@
+name: Build YueUltra Theme
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper --gradle-version 8.2
+
+      - name: Build Theme AAR
+        run: ./gradlew :theme:assembleRelease --no-daemon
+
+      - name: Create JAR files
+        run: |
+          ./gradlew :theme:createJar --no-daemon
+          ./gradlew :theme:createUltraJar --no-daemon
+
+      - name: Build Demo APK
+        run: ./gradlew :app:assembleDebug --no-daemon
+
+      - name: Upload AAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: YueUltra-Theme-AAR
+          path: theme/build/outputs/aar/*.aar
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: YueUltra-Theme-JAR
+          path: theme/build/outputs/jar/*.jar
+
+      - name: Upload Demo APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: YueUltra-Demo-APK
+          path: app/build/outputs/apk/debug/*.apk
